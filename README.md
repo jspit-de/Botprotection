@@ -111,6 +111,12 @@ Set the maximum input time in seconds.
 The time should be chosen as a maximum human user needs to fill out the form.
 The time can be set dynamically before applying isBot or status.
 
+## Demo and Test
+http://jspit.de/check/phpcheck.botprotection.php
+
+## Documentation
+http://jspit.de/tools/classdoc.php?class=Botprotection
+
 ## Requirements
 
 - PHP 7.x, PHP 8.x
