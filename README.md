@@ -19,7 +19,7 @@ This array is required by the class for internal purposes and must not be used f
 
 ```php
 session_start();
-require __DIR__.'/../class/Botprotection.php';
+require __DIR__.'/rel_path_to_class/Botprotection.php';
 
 $botprotect = new Botprotection;
 $status = $botprotect->status('email2', false);
@@ -54,6 +54,63 @@ $html = <<<HTML
 </html>
 HTML;
 echo $html;
-
 ```
 
+## Methods
+
+### protectionInput(string $name) : string
+
+Returns HTML as a string to be embedded in a form.
+The form must use the POST method. 
+The name is used for the generated input elements and is also reference.
+Special information for verifying the form response is stored under these names in the session array.
+
+### isBot(string $name, bool $setNameInvalid = false) : bool
+
+Returns true if a bot has been identified. 
+The name must be identical to the name used in the protectionInput method.
+If the form has not yet been submitted, the method returns false.
+With $setNameInvalid = true, the information under the names in the session is deleted.
+The second parameter can be set to true if the isBot and status methods are no longer used afterwards.
+
+### status(string $name, bool $setNameInvalid = false) : int
+Returns a number as status for the verification of the protection input elements. 
+
+ Number | Description                   
+ -------| ------------------------------ 
+-1      | Form not submitted       
+ 0      | Ok, no bot 
+ 1      | Name has expired, the name is unknown, or there is a session error
+ 2      | Name not exists in $_POST
+ 3      | $_POST[$name] is not a array
+ 4      | Keys 0 and/or TokenId not exists
+ 5      | Honeypot not empty
+ 6      | Invalid Token
+ 7      | Time < minInputTime
+ 8      | Time > maxInputTime
+
+With $setNameInvalid = true, the information under the names in the session is deleted.
+The second parameter can be set to true if the isBot and status methods are no longer used afterwards.
+
+### setMinInputTime(int $minSeconds = 5) : self
+
+Set the minimum input time in seconds. 
+The time should be chosen as minimally as a human user needs to fill out the form.
+The time can be set dynamically before applying isBot or status.
+
+```php
+$status = $botProtection
+  ->setMinInputTime(3)  //3 seconds
+  ->status('email1bcc')
+;
+```
+
+### setMaxInputTime(int $maxSeconds = 1200) : self
+
+Set the maximum input time in seconds.
+The time should be chosen as a maximum human user needs to fill out the form.
+The time can be set dynamically before applying isBot or status.
+
+## Requirements
+
+- PHP 7.x, PHP 8.x

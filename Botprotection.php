@@ -28,8 +28,12 @@ class Botprotection {
      */
     public function __construct() {
         //Verification of a valid SESSION exists
-        if(!session_id()) {
-            $msg = 'This class needs a session_start() in advance';
+        $sessionStatus = session_status();
+        if(session_status() === PHP_SESSION_NONE AND !headers_sent()) {
+            session_start();
+        }
+        if(session_status() !== PHP_SESSION_ACTIVE) {
+            $msg = __Class__.' needs a session_start() before the first output';
             throw new \Exception($msg);
         }
         if(!array_key_exists(self::SESSKEY,$_SESSION)){
@@ -89,7 +93,7 @@ class Botprotection {
      * @param bool $setIdInvalid, sets entry from name to invalid, default true,
      * @return int : status
      */
-    public function status(string $name, bool $setNameInvalid = true) : int {
+    public function status(string $name, bool $setNameInvalid = false) : int {
         if(empty($_POST)) return -1; //No form submitted yet
         //Status 1: $name has expired, the name is unknown, or there is a session error
         if(!array_key_exists($name,$_SESSION[self::SESSKEY])) return 1;
@@ -124,8 +128,8 @@ class Botprotection {
      * @param bool $setIdInvalid, sets entry from name to invalid, default true,
      * @return bool
      */
-    public function isBot(string $name, bool $setIdInvalid = true) : bool {
-        return $this->status($name,$setIdInvalid) > 0;
+    public function isBot(string $name, bool $setNameInvalid = false) : bool {
+        return $this->status($name,$setNameInvalid) > 0;
     }
 
 
