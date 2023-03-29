@@ -3,8 +3,7 @@
 .---------------------------------------------------------------------------.
 |  Software: PHP class Botprotection                                        |
 |   Version: 1.0                                                            |
-|   Date   : 2023-03-26                                                     |
-|      Site: http:                                                          |
+|   Date   : 2023-03-29                                                     |
 | ------------------------------------------------------------------------- |
 | Copyright (c) 2023, Peter Junk. All Rights Reserved.                      |
 | ------------------------------------------------------------------------- |
@@ -18,7 +17,6 @@
 class Botprotection {
     const SESSKEY = 'Botprotection_v1';
     //min + max. Zeit fuer Formular 
-    
     private $minInputTime = 5;  //min time in seconds for formular input
     private $maxInputTime = 1200; //max time in seconds for formular input
 
