@@ -63,6 +63,7 @@ echo $html;
 Returns HTML as a string to be embedded in a form.
 The form must use the POST method. 
 The name is used for the generated input elements and is also reference.
+The name must be unique, do not use the name for other elements.
 Special information for verifying the form response is stored under these names in the session array.
 
 ### isBot(string $name, bool $setNameInvalid = false) : bool
