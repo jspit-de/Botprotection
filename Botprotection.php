@@ -3,7 +3,7 @@
 .---------------------------------------------------------------------------.
 |  Software: PHP class Botprotection                                        |
 |   Version: 1.0                                                            |
-|   Date   : 2023-03-29                                                     |
+|   Date   : 2023-03-31                                                     |
 | ------------------------------------------------------------------------- |
 | Copyright (c) 2023, Peter Junk. All Rights Reserved.                      |
 | ------------------------------------------------------------------------- |
@@ -19,6 +19,7 @@ class Botprotection {
     //min + max. Zeit fuer Formular 
     private $minInputTime = 5;  //min time in seconds for formular input
     private $maxInputTime = 1200; //max time in seconds for formular input
+    private $nameset = [];
 
     /*
      * Class constructor
@@ -65,6 +66,7 @@ class Botprotection {
      * @return string html
      */
     public function protectionInput(string $name) : string {
+        $this->nameset[] = $name;
         $uid = strtr(uniqid("k",true),["." => ""]);
         $rnd = dechex(rand(4096,65535)); //random string
         $_SESSION[self::SESSKEY][$name] = [
@@ -90,8 +92,13 @@ class Botprotection {
      * @param string $name: The same name must be used here as when calling protectionInput
      * @param bool $setIdInvalid, sets entry from name to invalid, default true,
      * @return int : status
+     * @throws ErrorException
      */
     public function status(string $name, bool $setNameInvalid = false) : int {
+        if(in_array($name,$this->nameset)){
+            $msg = 'status must be called before generating a new protectionInput';
+            throw new \ErrorException($msg);    
+        }
         if(empty($_POST)) return -1; //No form submitted yet
         //Status 1: $name has expired, the name is unknown, or there is a session error
         if(!array_key_exists($name,$_SESSION[self::SESSKEY])) return 1;
@@ -127,6 +134,10 @@ class Botprotection {
      * @return bool
      */
     public function isBot(string $name, bool $setNameInvalid = false) : bool {
+        if(in_array($name,$this->nameset)){
+            $msg = 'isBot must be called before generating a new protection input';
+            throw new \ErrorException($msg);    
+        }
         return $this->status($name,$setNameInvalid) > 0;
     }
 
