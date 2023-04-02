@@ -58,13 +58,15 @@ echo $html;
 
 ## Methods
 
-### protectionInput(string $name) : string
+### protectionInput(string $name, bool $withoutJavascript = false) : string
 
 Returns HTML as a string to be embedded in a form.
 The form must use the POST method. 
 The name is used for the generated input elements and is also reference.
 The name must be unique, do not use the name for other elements.
 Special information for verifying the form response is stored under these names in the session array.
+if $withoutJavascript is set to true no javascript will be used. 
+The elements with the id's Id_{name}_0,Id_{name}_1 and Id_{name}_2 must then be hidden with CSS.
 
 ### isBot(string $name, bool $setNameInvalid = false) : bool
 

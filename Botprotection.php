@@ -63,9 +63,10 @@ class Botprotection {
     /*
      * create ptrotection input element
      * @param string $name
+     * @param bool $withoutJavascript, default false
      * @return string html
      */
-    public function protectionInput(string $name) : string {
+    public function protectionInput(string $name, bool $withoutJavascript = false) : string {
         $this->nameset[] = $name;
         $uid = strtr(uniqid("k",true),["." => ""]);
         $rnd = dechex(rand(4096,65535)); //random string
@@ -76,14 +77,17 @@ class Botprotection {
         ];
         $html = '<label for="Id_'.$name.'_0" id="Id_'.$name.'_2" > Ihre Eingabe';
         $html .= '<input name="'.$name.'[0]" id="Id_'.$name.'_0" type="text" value=""></label>';
-        $html .= '<input name="'.$name.'['.$uid.']" id="Id_'.$name.'_1" type="text" value="">';
-        $html .= '<script>
-            (function() {
-                var el0 = document.getElementById("Id_'.$name.'_0"); el0.style.display="none";
-                var el1 = document.getElementById("Id_'.$name.'_1"); el1.style.display="none";el1.value="'.$rnd.'";
-                document.getElementById("Id_'.$name.'_2").style.display="none";
-            })();
-        </script>';
+        $value = $withoutJavascript ? $rnd : "";
+        $html .= '<input name="'.$name.'['.$uid.']" id="Id_'.$name.'_1" type="text" value="'.$value.'">';
+        if(!$withoutJavascript){
+            $html .= '<script>
+                (function() {
+                    var el0 = document.getElementById("Id_'.$name.'_0"); el0.style.display="none";
+                    var el1 = document.getElementById("Id_'.$name.'_1"); el1.style.display="none";el1.value="'.$rnd.'";
+                    document.getElementById("Id_'.$name.'_2").style.display="none";
+                })();
+            </script>';
+        }
         return $html;
     }
 
