@@ -18,11 +18,14 @@ This array is required by the class for internal purposes and must not be used f
 ## Basic example
 
 ```php
+<?php
+//Basic example Botprotection
 session_start();
-require __DIR__.'/rel_path_to_class/Botprotection.php';
+
+require __DIR__.'/../class/Botprotection.php';
 
 $botprotect = new Botprotection;
-$status = $botprotect->status('email2', false);
+$status = $botprotect->status('email2');
 if(!empty($_POST)){
     $input = htmlspecialchars($_POST['inputtext']);
     $sender = $botprotect->isBot('email2') ? "Bot" : "Human";
@@ -31,6 +34,8 @@ else {
     $input = "";
     $sender = "Nobody";
 }
+
+$protectiveElement = $botprotect->protectionInput('email2');
 
 $html = <<<HTML
 <!DOCTYPE html>
@@ -47,7 +52,7 @@ $html = <<<HTML
         <label>
             Input <input name='inputtext' type='text' value='$input'>
         </label>
-        {$botprotect->protectionInput('email2')}
+        $protectiveElement
         <button type='submit'>Send</button>
     </form>
   </body>
